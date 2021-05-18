@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Client</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'Get',
+                dataType: 'JSON',
+                url: 'https://bigeye5.herokuapp.com/api/clients/',
+                success: function (data) {
+                    // location.reload();
+
+                    i = 0;
+                    while (i < data.length){
+                        client = data[i];
+                        $("#client_id_input").append("<option value='" + client.ClientID + "'>" + client.LastName + client.FirstName+"\</option>");
+                        i = i + 1;
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $("#add_client_but").click(function () {
+                lastname1 = $("#last_name_input").val();
+                firstname1 = $("#first_name_input").val();
+                street1 = $("#street_address_input").val();
+                suburb1 = $("#suburb_input").val();
+                city1 = $("#city_input").val();
+                phone1 = $("#phone_number_input").val();
+                status1 = $("#credit_status_input").val();
+                email1 = $("#email_address_input").val();
+
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'https://bigeye5.herokuapp.com/api/clients/',
+                    data: {
+                        LastName: lastname1,
+                        FirstName: firstname1,
+                        StreetAddress: street1,
+                        Suburb: suburb1,
+                        City: city1,
+                        PhoneNumbrer: phone1,
+                        ClientStatus: status1,
+                        EmailAddress: email1,
+
+                    },
+                    success: function (data) {
+                        alert('Client added successfully');
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        errors = JSON.parse(err.responseText);
+                        console.log(errors);
+                        $("#last_name_input_err").text(errors.lastname);
+                        $("#first_name_input_err").text(errors.firstname);
+                        $("#street_address_input_err").text(errors.street);
+                        $("#suburb_input_err").text(errors.suburb);
+                        $("#city_input_err").text(errors.city);
+                        $("#phone_number_input_err").text(errors.phone);
+                        $("#credit_status_input_err").text(errors.status);
+                        $("#email_address_input_err").text(errors.email);
+
+
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form onsubmit="return false">
+    <h2><u>Add Client</u></h2>
+    <p><label>  Last Name: </label><input id="last_name_input" type="text" maxlength="20" size="20"></p>
+    <p id = "last_name_input_err"></p>
+    <p><label>  First Name: </label><input id="first_name_input" type="text" maxlength="20" size="20"></p>
+    <p id = "first_name_input_err"></p>
+    <p><label> Street Address: </label><input id="street_address_input" type="text" maxlength="30" size="30"></p>
+    <p id = "street_address_input_err"></p>
+    <p><label>  Suburb: </label><input id="suburb_input" type="text" maxlength="20" size="20"></p>
+    <p id = "suburb_input_err"></p>
+    <p><label>  City: </label><input id="city_input" type="text" maxlength="20" size="20"></p>
+    <p id = "city_input_err"></p>
+    <p><label>  Phone Number: </label><input id="phone_number_input" type="text" maxlength="20" size="20"></p>
+    <p id = "phone_number_input_err"></p>
+    <p><label>  Client Status: </label><input id="credit_status_input" type="text" maxlength="20" size="20"></p>
+    <p id = "credit_status_input_err"></p>
+    <p><label>  Email Address: </label><input id="email_address_input" type="text" maxlength="20" size="20"></p>
+    <p id = "email_address_input_err"></p>
+
+    </select>
+    </p>
+
+    <button class = "button fit special" type="button" id="add_client_but">Add Client</button>
+    <a class = "button fit" href="MainMenu.html">Return</a>
+</form>
+</body>
+</html>

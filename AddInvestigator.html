@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Investigator</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: 'Get',
+                dataType: 'JSON',
+                url: 'https://bigeye5.herokuapp.com/api/investigators/',
+                success: function (data) {
+                    // location.reload();
+
+                    i = 0;
+                    while (i < data.length){
+                        investigator = data[i];
+                        $("#investigator_id_input").append("<option value='" + investigator.InvestigatorID + "'>" + investigator.LastName + investigator.FirstName+"\</option>");
+                        i = i + 1;
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $("#add_investigator_but").click(function () {
+                lastname1 = $("#last_name_input").val();
+                firstname1 = $("#first_name_input").val();
+                street1 = $("#street_address_input").val();
+                suburb1 = $("#suburb_input").val();
+                phone1 = $("#phone_number_input").val();
+                hourly1 = $("#hourly_rate_input").val();
+
+
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'https://bigeye5.herokuapp.com/api/investigators/',
+                    data: {
+                        LastName: lastname1,
+                        FirstName: firstname1,
+                        StreetAddress: street1,
+                        Suburb: suburb1,
+                        PhoneNumbrer: phone1,
+                        HourlyRate: hourly1,
+
+
+                    },
+                    success: function (data) {
+                        alert('Investigator added successfully');
+                        location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err);
+                        errors = JSON.parse(err.responseText);
+                        console.log(errors);
+                        $("#last_name_input_err").text(errors.lastname);
+                        $("#first_name_input_err").text(errors.firstname);
+                        $("#street_address_input_err").text(errors.street);
+                        $("#suburb_input_err").text(errors.suburb);
+                        $("#phone_number_input_err").text(errors.phone);
+                        $("#hourly_rate_input_err").text(errors.hourly);
+
+
+
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form onsubmit="return false">
+    <h2><u>Add Investigator</u></h2>
+    <p><label>  Last Name: </label><input id="last_name_input" type="text" maxlength="30" size="30"></p>
+    <p id = "last_name_input_err"></p>
+    <p><label>  First Name: </label><input id="first_name_input" type="text" maxlength="30" size="30"></p>
+    <p id = "first_name_input_err"></p>
+    <p><label> Street Address: </label><input id="street_address_input" type="text" maxlength="50" size="50"></p>
+    <p id = "street_address_input_err"></p>
+    <p><label>  Suburb: </label><input id="suburb_input" type="text" maxlength="20" size="20"></p>
+    <p id = "suburb_input_err"></p>
+    <p><label>  Phone Number: </label><input id="phone_number_input" type="text" maxlength="16" size="16"></p>
+    <p id = "phone_number_input_err"></p>
+    <p><label>  Hourly Rate: </label><input id="hourly_rate_input" type="text" maxlength="20" size="20"></p>
+    <p id = "hourly_rate_input_err"></p>
+
+    </select>
+    </p>
+
+    <button class = "button fit special" type="button" id="add_investigator_but">Add Investigator</button>
+    <a class = "button fit" href="MainMenu.html">Return</a>
+</form>
+</body>
+</html>
